@@ -19,7 +19,7 @@ export interface AuthUser {
         };
     };
     scope: string;
-    authorities: string[];
+    authorities?: string[];
     exp: number;
 }
 
