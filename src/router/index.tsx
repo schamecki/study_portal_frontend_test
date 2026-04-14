@@ -1,10 +1,19 @@
 // Routing principal
 import {createBrowserRouter} from "react-router-dom";
+import {MainLayout} from "../components/Layout/MainLayout.tsx";
+import {NotFoundPage} from "../components/Layout/NotFoundPage.tsx";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <h1>Home page</h1>
+        element: <MainLayout></MainLayout>,
+        children: [
+            {
+                path: '',
+                element: <button>Click here</button>
+            }
+        ],
+        errorElement: <NotFoundPage></NotFoundPage>
     }
 ])
 
