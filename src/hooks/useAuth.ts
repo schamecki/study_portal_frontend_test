@@ -3,8 +3,12 @@ import { useAuthStore } from '../store/auth.store';
 import { keycloakService } from '../services/keycloak.service';
 
 export function useAuth() {
-    const { authUser, isAuthenticated, isLoading } = useAuthStore();
+    //const { authUser, isAuthenticated, isLoading } = useAuthStore();
 
+        const  authUser = useAuthStore((state) => state.authUser);
+        const  isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+        const  isLoading = useAuthStore((state) => state.isLoading);
+        const  setAuthUserStore = useAuthStore((state) => state.setAuthUser);
     const initialize = useCallback(async () => {
         const { setAuthUser, setLoading, clearUser } = useAuthStore.getState();
 
@@ -25,9 +29,8 @@ export function useAuth() {
                 throw new Error('User not found in token');
             }
 
-            console.log(user, 'as user', keycloakService)
-
             setAuthUser(user);
+            setAuthUserStore(user)
         } catch (error) {
             console.error('Auth initialization failed:', error);
 

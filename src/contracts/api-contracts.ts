@@ -99,6 +99,16 @@ export interface Notification {
     createdAt: string;
 }
 
+export interface Service {
+    id: string;
+    name: string;
+    description: string;
+    active: boolean;
+    code: string;
+    image: string;
+    icon: string;
+}
+
 // --------------- API Response Wrappers ---------------
 
 export interface ApiResponse<T> {
@@ -147,4 +157,9 @@ export const API_ENDPOINTS = {
         BY_ID: (id: string) => `/api/notifications/${id}`,
         MARK_READ: (id: string) => `/api/notifications/${id}/read`,
     },
+    SERVICE: {
+        BASE: '/api/services',
+        BY_ID: (id: string) => `/api/services/${id}`,
+        MARK_READ: (id: string) => `/api/services/${id}/read`,
+    }
 } as const;

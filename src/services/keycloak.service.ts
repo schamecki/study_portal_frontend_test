@@ -84,8 +84,6 @@ export const keycloakService = {
 
         const parsed = keycloak.tokenParsed as Record<string, unknown>;
 
-        console.log(keycloak.tokenParsed, 'as token parsed', parsed);
-
         return {
             sub: (parsed.sub as string) || '',
             preferred_username: (parsed.preferred_username as string) || '',

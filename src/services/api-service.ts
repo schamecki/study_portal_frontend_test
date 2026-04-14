@@ -4,8 +4,8 @@ import { keycloakService } from './keycloak.service';
 // --------------- Axios Instance ---------------
 
 const apiClient: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-    timeout: 15_000,
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
+    timeout: 15000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -55,3 +55,5 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+export default apiClient;

@@ -2,6 +2,7 @@ import { Suspense, useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import router from "./router";
+import {Loader} from "./components/shared";
 
 const AppContent = () => {
   const { initialize, isLoading } = useAuth();
@@ -14,7 +15,7 @@ const AppContent = () => {
   if (isLoading) {
     return (
         <div className="flex items-center justify-center h-screen bg-bg-page">
-          <p>Chargement...</p>
+            <Loader size="lg" text="Initialisation..." />
         </div>
     );
   }
@@ -27,7 +28,7 @@ const App = () => {
       <Suspense
           fallback={
             <div className="flex items-center justify-center h-screen bg-bg-page">
-                <p>Chargement...</p>
+                <Loader size="lg" text="Chargement..." />
             </div>
           }
       >
