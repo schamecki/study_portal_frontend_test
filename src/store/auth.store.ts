@@ -15,12 +15,9 @@ export interface AuthStore {
 export const useAuthStore = create<AuthStore>((set) => ({
   authUser: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
 
-  setAuthUser: (authUser: AuthUser | null) => {
-    console.log(authUser, 'as UserAuth')
-    set({ authUser, isAuthenticated: !!authUser, isLoading: false })
-  },
+  setAuthUser: (authUser: AuthUser | null) => set({ authUser, isAuthenticated: !!authUser}),
 
   clearUser: () => set({ authUser: null, isAuthenticated: false, isLoading: false }),
 

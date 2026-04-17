@@ -68,6 +68,7 @@ export const keycloakService = {
      * Returns true if the token was successfully refreshed.
      */
     async refreshToken(minValidity: number = 30): Promise<boolean> {
+        if(!keycloak.token) return false
         try {
             return await keycloak.updateToken(minValidity);
         } catch(error) {
@@ -84,10 +85,14 @@ export const keycloakService = {
 
         const parsed = keycloak.tokenParsed as Record<string, unknown>;
 
+        console.log(parsed, 'as Token Parsed from token');
+
         return {
             sub: (parsed.sub as string) || '',
             preferred_username: (parsed.preferred_username as string) || '',
             email: (parsed.email as string) || '',
+            last_name: parsed.family_name as string,
+            first_name: parsed.given_name as string,
             realm_access: (parsed.realm_access as AuthUser['realm_access']) || { roles: [] },
             resource_access: (parsed.resource_access as AuthUser['resource_access']) || {},
             scope: (parsed.scope as string) || '',

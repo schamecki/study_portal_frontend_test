@@ -72,12 +72,12 @@ export const ProfilePage = () => {
               <Input
                   label="Nom"
                   placeholder="Nom"
-                  defaultValue="Roux"
+                  defaultValue={user?.last_name ?? ''}
               />
               <Input
                   label="Prénom"
                   placeholder="Prénom"
-                  defaultValue="Fleming"
+                  defaultValue={user?.first_name ?? ''}
               />
               <Input
                   label="Email"

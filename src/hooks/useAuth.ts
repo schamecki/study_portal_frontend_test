@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 import { useAuthStore } from '../store/auth.store';
 import { keycloakService } from '../services/keycloak.service';
 
+let isInitializing = false;
+
 export function useAuth() {
     //const { authUser, isAuthenticated, isLoading } = useAuthStore();
 
@@ -10,6 +12,9 @@ export function useAuth() {
         const  isLoading = useAuthStore((state) => state.isLoading);
         const  setAuthUserStore = useAuthStore((state) => state.setAuthUser);
     const initialize = useCallback(async () => {
+        if (isInitializing) return;
+        isInitializing = true;
+        
         const { setAuthUser, setLoading, clearUser } = useAuthStore.getState();
 
         setLoading(true);

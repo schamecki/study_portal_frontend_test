@@ -10,6 +10,8 @@ export interface AuthUser {
     sub: string;
     preferred_username: string;
     email: string;
+    last_name: string;
+    first_name: string;
     realm_access: {
         roles: string[];
     };

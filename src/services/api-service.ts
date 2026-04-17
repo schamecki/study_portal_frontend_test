@@ -16,14 +16,15 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
     async (config) => {
-        // Attempt to refresh the token if it's about to expire
-        await keycloakService.refreshToken(30);
+        if (keycloakService.getToken()) {
+            await keycloakService.refreshToken(30);
 
-        const token = keycloakService.getToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            const token = keycloakService.getToken();
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
         }
-        return config;
+        return config
     },
     (error) => Promise.reject(error),
 );
@@ -40,16 +41,22 @@ apiClient.interceptors.response.use(
 
         // Handle 401 — attempt token refresh then retry once
         if (error.response?.status === 401) {
-            const refreshed = await keycloakService.refreshToken(0);
-            if (refreshed && config) {
-                const token = keycloakService.getToken();
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
+            try{
+                const refreshed = await keycloakService.refreshToken(0);
+                if (refreshed && config) {
+                    const token = keycloakService.getToken();
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
+                    return apiClient(config);
                 }
-                return apiClient(config);
+                await keycloakService.logout();
+            }catch(err){
+                // Refresh failed — redirect to login
+                await keycloakService.logout();
+
+                console.log(err)
             }
-            // Refresh failed — redirect to login
-            await keycloakService.logout();
         }
 
         return Promise.reject(error);

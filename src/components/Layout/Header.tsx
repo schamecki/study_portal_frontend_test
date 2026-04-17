@@ -57,7 +57,7 @@ export const Header = ({onMenuClick}: HeaderProps) => {
                 </button>
 
                 {/* Page title */}
-                <h1 className="text-2xl lg:text-3xl font-bold text-boaz-blue">{pageInfos.name} {user?.sub}</h1>
+                <h1 className="text-2xl lg:text-3xl font-bold text-boaz-blue">{pageInfos.name}</h1>
 
                 {/* Right side — user profile section */}
                 <div className="flex items-center gap-6">
