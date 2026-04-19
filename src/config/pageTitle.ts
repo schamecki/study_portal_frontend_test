@@ -8,4 +8,4 @@ interface PageTitles {
 export const PAGE_TITLES: PageTitles = {
     "/": {name: 'accueil', title: "Accueil - Mon Application"},
     "/profil": {name: 'profile', title: "Profile - Mon Application"},
-};
+}

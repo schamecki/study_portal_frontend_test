@@ -78,7 +78,7 @@ export const Header = ({onMenuClick}: HeaderProps) => {
                             {/* Avatar */}
                             <div className="w-10 h-10 rounded-full bg-boaz-orange flex items-center justify-center text-white font-semibold text-sm overflow-hidden">
                                 <img
-                                    src={/*`https://i.pravatar.cc/40?u=${user?.preferred_username}`*/userProfil}
+                                    src={user?.profile || userProfil}
                                     alt={user?.preferred_username}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {

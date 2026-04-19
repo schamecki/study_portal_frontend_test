@@ -1,11 +1,20 @@
-import { useState } from 'react';
-import { Button } from '../../../../../components/shared/Button';
-import { Input } from '../../../../../components/shared/Input';
+import React, { useState } from 'react';
+import { Button } from '../../../../../components/shared';
+import { Input } from '../../../../../components/shared';
 import { useAuthStore } from '../../../../../store/auth.store';
-import userProfil from "../../../../../assets/images/user.png";
+import defaultUserProfil from "../../../../../assets/images/user.png";
 import ProfileTabContent from "../components/ProfileTabContent.tsx";
 import cadenas from "../../../../../assets/icons/cadenas.svg"
-
+import {formatPhoneNumber, unFormatPhoneNumber} from "../../../../../useful/str.ts";
+import {
+  getCurrenUser,
+  updateUserAvatar,
+  updateUserPassword,
+  updateUserProfile
+} from "../../../../../services/api/user.api.ts";
+import type {AuthUser, UserPasswordRequest, UserProfileRequest} from "../../../../../contracts/api-contracts.ts";
+import {ProfilePhotoUploader} from "../../../../../components/shared/ProfilePhotoUploader.tsx";
+import PasswordInput from "../../../../../components/shared/PasswordInput.tsx";
 
 type Tab = 'infos' | 'securite' | 'notifications' | 'partenaire';
 
@@ -19,6 +28,84 @@ const tabs: { id: Tab; label: string, icon: string }[] = [
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<Tab>('infos');
   const user = useAuthStore((s) => s.authUser);
+  const setUser = useAuthStore((s) => s.setAuthUser)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const handleProfileTabSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setLoading(true)
+    const formData = new FormData(event.target);
+
+    const data: UserProfileRequest = {
+      email: formData.get('email') as string,
+      lastName: formData.get('lastname') as string,
+      firstName: formData.get('firstname') as string,
+      attributes: {
+        phone: [unFormatPhoneNumber(formData.get('phone') as string)]
+      },
+    }
+
+    if (hasImageChange && data.attributes) data.attributes.profile = [userProfil]
+
+    await updateUserProfile(data)
+
+    const currentUser = await getCurrenUser()
+
+    const newUser = {email: currentUser.email, last_name: currentUser.lastName, first_name: currentUser.firstName, profile: null as string|null, phone_number: null as string|null }
+    if (currentUser.attributes?.profile) newUser.profile = currentUser.attributes.profile[0]
+    if (currentUser.attributes?.phone) newUser.phone_number = currentUser.attributes.phone[0]
+
+    setUser({...user, ...newUser} as AuthUser)
+
+    setLoading(false)
+  }
+
+  const handleSecurityTabSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setLoading(true)
+    const formData = new FormData(event.target);
+
+    const data: UserPasswordRequest = {
+      currentPassword: formData.get('currentPassword') as string,
+      newPassword: formData.get('newPassword') as string,
+      confirmation: formData.get('confirmation') as string
+    }
+
+    await updateUserPassword(data)
+
+    setLoading(false)
+  }
+
+  const handleProfileTabReset = async (event: React.SubmitEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      const currentUser = await getCurrenUser()
+
+      console.log(currentUser, 'as current user')
+  }
+
+  const [userProfil, setUserProfil] = useState<string>(user?.profile || defaultUserProfil);
+  const [error, setError] = useState<string | null>(null);
+  const [hasImageChange, setHasImageChange] = useState<boolean>(false);
+
+  const handlePhotoUpload = async (file: File): Promise<string> => {
+    // Ton API call
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await updateUserAvatar(formData)
+
+    setUserProfil(response.profile);
+    setHasImageChange(true)
+    return response.profile;
+  };
+
+  const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.value = formatPhoneNumber(event.target.value);
+  }
+  const handleError = (error: { type: string; message: string }) => {
+    setError(error.message);
+    setTimeout(() => setError(null), 3000);
+  };
 
   return (
     <div>
@@ -50,100 +137,88 @@ export const ProfilePage = () => {
       {/* Tab content with smooth transitions */}
       <div className="overflow-hidden">
         <ProfileTabContent active={activeTab === 'infos'}>
-          <div className="max-w-2xl mx-auto">
+          <form className="max-w-2xl mx-auto" onSubmit={handleProfileTabSubmit} onReset={handleProfileTabReset}>
             {/* Avatar */}
-            <div className="flex flex-col items-center mb-8">
-              <div
-                  className="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-3">
-                {/*{user?.preferred_username?.charAt(0).toUpperCase() || 'U'}*/}
-                <img
-                    src={/*`https://i.pravatar.cc/40?u=${user?.preferred_username}`*/userProfil}
-                    alt={user?.preferred_username}
-                    className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <button className="text-sm text-boaz-blue-light hover:underline cursor-pointer">
-                Modifier la Photo
-              </button>
+            <div>
+              <ProfilePhotoUploader
+                  currentPhotoUrl={userProfil}
+                  username={user?.preferred_username}
+                  onPhotoUpload={handlePhotoUpload}
+                  onError={handleError}
+                  maxSizeMB={2}
+                  acceptedFormats={['image/jpeg', 'image/png', 'image/webp']}
+              />
+
+              {error && (
+                  <div className="text-red-500 text-sm text-center mt-2">
+                    {error}
+                  </div>
+              )}
             </div>
 
-            {/* Form — matching Figma profile form */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <Input
                   label="Nom"
                   placeholder="Nom"
                   defaultValue={user?.last_name ?? ''}
+                  name='lastname'
+                  disabled={loading}
               />
               <Input
                   label="Prénom"
                   placeholder="Prénom"
                   defaultValue={user?.first_name ?? ''}
+                  name='firstname'
               />
               <Input
                   label="Email"
                   type="email"
                   placeholder="Email"
                   defaultValue={user?.email || 'john.doe@boaz-study.com'}
+                  name='email'
+                  disabled={loading}
               />
               <Input
                   label="Numéro de téléphone"
                   type="tel"
+                  name="phone"
                   placeholder="Numéro de téléphone"
-                  defaultValue="546-933-2711"
+                  defaultValue={formatPhoneNumber(user?.phone_number || '')}
+                  onChange={handlePhoneChange}
+                  disabled={loading}
               />
             </div>
 
             <div className="flex justify-end gap-3 mt-8">
-              <Button variant="ghost" size="md">Annuler</Button>
-              <Button variant="primary" size="md">Enregistrer</Button>
+              <Button variant="ghost" size="md" type="reset">Annuler</Button>
+              <Button variant="primary" size="md" type="submit" loading={loading}>Enregistrer</Button>
             </div>
-          </div>
+          </form>
         </ProfileTabContent>
         <ProfileTabContent active={activeTab === 'securite'}>
-          <div className="max-w-lg mx-auto flex flex-col gap-5">
-            <Input
+          <form className="max-w-lg mx-auto flex flex-col gap-5" onSubmit={handleSecurityTabSubmit}>
+            <PasswordInput
                 label="Mot de passe actuel"
-                type="password"
                 placeholder="Entrez votre mot de passe actuel"
                 defaultValue="••••••••••"
-                icon={
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                }
+                name="currentPassword"
             />
-            <Input
+            <PasswordInput
                 label="Nouveau mot de passe"
-                type="password"
                 placeholder="Minimum 8 caractères"
-                icon={
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                }
+                name="newPassword"
             />
-            <Input
+            <PasswordInput
                 label="Confirmer le mot de passe"
-                type="password"
                 placeholder="Confirmez votre nouveau mot de passe"
-                icon={
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                }
+                name="confirmation"
             />
 
             <div className="flex justify-end gap-3 mt-4">
-              <Button variant="ghost" size="md">Annuler</Button>
-              <Button variant="primary" size="md">Enregistrer</Button>
+              <Button variant="ghost" size="md" type="reset">Annuler</Button>
+              <Button variant="primary" size="md" type="submit">Enregistrer</Button>
             </div>
-          </div>
+          </form>
         </ProfileTabContent>
         <ProfileTabContent active={activeTab === 'notifications'}>
           <div className="max-w-lg mx-auto">

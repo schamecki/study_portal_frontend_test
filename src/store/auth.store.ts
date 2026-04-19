@@ -5,19 +5,22 @@ export interface AuthStore {
   authUser: AuthUser | null; // Si l'utilisateur peut être non connecté
   isAuthenticated: boolean;
   isLoading: boolean;
+  authError: string | null;
   login: (credentials: { email: string; password: string }) => void;
   logout: () => void;
   clearUser: () => void;
   setAuthUser: (authUser: AuthUser | null) => void;
   setLoading: (isLoading: boolean) => void;
+  setAuthError: (error: string | null) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   authUser: null,
   isAuthenticated: false,
   isLoading: true,
+  authError: null,
 
-  setAuthUser: (authUser: AuthUser | null) => set({ authUser, isAuthenticated: !!authUser}),
+  setAuthUser: (authUser: AuthUser | null) => set({ authUser, isAuthenticated: !!authUser, authError: null }),
 
   clearUser: () => set({ authUser: null, isAuthenticated: false, isLoading: false }),
 
@@ -28,5 +31,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     console.log(credentials)
   },
 
-  setLoading: (isLoading: boolean) => set({ isLoading })
+  setLoading: (isLoading: boolean) => set({ isLoading }),
+  
+  setAuthError: (error: string | null) => set({ authError: error })
 }));

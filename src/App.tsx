@@ -2,15 +2,19 @@ import { Suspense, useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import router from "./router";
-import {Loader} from "./components/shared";
+import {Loader, AuthError} from "./components/shared";
 
 const AppContent = () => {
-  const { initialize, isLoading } = useAuth();
+  const { initialize, isLoading, authError } = useAuth();
 
 
   useEffect(() => {
     initialize().then(r => console.log(r));
   }, [initialize]);
+
+  if (authError) {
+    return <AuthError errorDetails={authError} onRetry={initialize} />;
+  }
 
   if (isLoading) {
     return (

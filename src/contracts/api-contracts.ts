@@ -23,6 +23,22 @@ export interface AuthUser {
     scope: string;
     authorities?: string[];
     exp: number;
+    phone_number: string
+    gender?: 'M'| 'F',
+    profile?: string | null
+}
+
+export interface UserPasswordRequest {
+    currentPassword: string;
+    newPassword: string;
+    confirmation: string;
+}
+
+export interface UserProfileRequest {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    attributes?: {phone?: string[], profile?: string[]};
 }
 
 // --------------- Permissions (scopes) ---------------
@@ -138,11 +154,11 @@ export interface ApiError {
 // --------------- API Endpoints ---------------
 
 export const API_ENDPOINTS = {
-    AUTH: {
-        LOGIN: '/api/auth/login',
-        LOGOUT: '/api/auth/logout',
-        REFRESH: '/api/auth/refresh',
-        ME: '/api/auth/me',
+    USER: {
+        PROFILE: '/api/users/account/profile',
+        AVATAR: '/api/users/account/avatar',
+        PASSWORD: '/api/users/account/password',
+        ME: '/api/users/account/me',
     },
     TICKETS: {
         BASE: '/api/tickets',

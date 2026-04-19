@@ -7,12 +7,16 @@
 import Keycloak from 'keycloak-js';
 import type {AuthUser} from '../contracts/api-contracts';
 
+export const url = import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080'as string
+export const realm = import.meta.env.VITE_KEYCLOAK_REALM || 'study-portal-realm' as string;
+const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'frontend-app'
+
 // --------------- Configuration ---------------
 
 const keycloakConfig: Keycloak.KeycloakConfig = {
-    url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080',
-    realm: import.meta.env.VITE_KEYCLOAK_REALM || 'study-portal-realm',
-    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'frontend-app',
+    url,
+    realm,
+    clientId,
 };
 
 // --------------- Keycloak Instance ---------------
@@ -91,13 +95,16 @@ export const keycloakService = {
             sub: (parsed.sub as string) || '',
             preferred_username: (parsed.preferred_username as string) || '',
             email: (parsed.email as string) || '',
-            last_name: parsed.family_name as string,
-            first_name: parsed.given_name as string,
+            last_name: parsed.family_name as string || '',
+            first_name: parsed.given_name as string || '',
             realm_access: (parsed.realm_access as AuthUser['realm_access']) || { roles: [] },
             resource_access: (parsed.resource_access as AuthUser['resource_access']) || {},
             scope: (parsed.scope as string) || '',
             authorities: this.getAuthorities(),
             exp: (parsed.exp as number) || 0,
+            phone_number: (parsed.phone_number as string) || '',
+            gender: (parsed.gender as 'M'| 'F') || 'M',
+            profile: (parsed.profile as string) || null
         };
     },
 
@@ -116,4 +123,8 @@ export const keycloakService = {
     getInstance(): Keycloak {
         return keycloak;
     },
+
+    async manageAccount(){
+        return await keycloak.accountManagement()
+    }
 };
