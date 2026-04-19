@@ -22,7 +22,7 @@ export const DashboardPage = () => {
       <h2 className="text-lg font-semibold text-boaz-blue mb-6">Les services Boaz</h2>
 
       {/* Service cards grid — matching Figma layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
         {services.map((service) => (
           <ServiceCard
             key={service.id}
