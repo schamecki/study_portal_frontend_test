@@ -1,27 +1,17 @@
 import { Link } from "react-router-dom";
+import type {Service} from "../../../../../contracts/api-contracts.ts";
+import serviceCodes from "../../../../../config/serviceCodes.ts";
 
-interface ServiceCardProps {
-    title: string;
-    icon: string;
-    backgroundImage: string;
-    path: string;
-}
-
-export const ServiceCard = ({
-                                title,
-                                icon,
-                                backgroundImage,
-                                path,
-                            }: ServiceCardProps) => {
+export const ServiceCard = ({service}: {service: Service}) => {
     return (
         <Link
-            to={path}
+            to={serviceCodes.find(s => s.code === service.code)?.path || '/'}
             className="group relative overflow-hidden rounded-3xl aspect-auto w-full max-w-xs flex flex-col transition-all duration-300 hover:shadow-xl"
         >
             {/* Background image with overlay */}
             <div
                 className="absolute inset-0 w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${backgroundImage})` }}
+                style={{ backgroundImage: `url(${service.image})` }}
             />
 
             {/* Dark overlay for text readability */}
@@ -32,7 +22,7 @@ export const ServiceCard = ({
                 {/* Icon */}
                 <div className="flex justify-center pt-12">
                     <img
-                        src={icon}
+                        src={service.icon}
                         alt="Service icon"
                         className="w-6 h-6 md:w-8 md:h-8 drop-shadow-lg"
                     />
@@ -41,7 +31,7 @@ export const ServiceCard = ({
                 {/* Title */}
                 <div className="text-center">
                     <h3 className="text-white text-xl md:text-2xl leading-tight drop-shadow-lg">
-                        {title}
+                        {service.title}
                     </h3>
                 </div>
             </div>

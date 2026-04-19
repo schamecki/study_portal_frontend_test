@@ -119,8 +119,8 @@ export interface Notification {
 
 export interface Service {
     id: string;
-    name: string;
-    description: string;
+    title: string;
+    description?: string;
     active: boolean;
     code: string;
     image: string;

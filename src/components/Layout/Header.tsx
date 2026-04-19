@@ -19,7 +19,7 @@ export const Header = ({onMenuClick}: HeaderProps) => {
     const location = useLocation();
 
     const getPageInfos = () => {
-        let result = {name: 'accueil', title: 'Study portal home'}
+        let result = {name: 'page introuvable', title: 'Study portal home'}
         const path = location.pathname;
         const titleEntry = Object.entries(PAGE_TITLES).find(([route]) => {
             const routeRegex = new RegExp(`^${route.replace(/:id/, "[^/]+")}$`);
