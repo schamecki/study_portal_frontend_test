@@ -8,4 +8,6 @@ interface PageTitles {
 export const PAGE_TITLES: PageTitles = {
     "/": {name: 'accueil', title: "Accueil - Mon Application"},
     "/profil": {name: 'profile', title: "Profile - Mon Application"},
+    "/avi": {name: 'Obtenir mon A.V.I', title: "Obtenir mon A.V.I - Boaz Study"},
+    "/ave/:id": {name: 'Obtenir mon A.V.I', title: (id: string) => `Étape ${id} - A.V.I - Boaz Study`},
 }

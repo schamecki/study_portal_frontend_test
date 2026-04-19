@@ -80,3 +80,72 @@ body {
   transform: translateY(0);
   transition: opacity 200ms ease-out, transform 200ms ease-out;
 }
+
+/* ============================================================
+   AVI Step Transitions
+   ============================================================ */
+
+/* Page entrance animation */
+.animate-page-in {
+  animation: pageIn 350ms ease-out both;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Step slide transitions within a page */
+.step-slide-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.step-slide-enter {
+  animation: slideIn 300ms ease-out both;
+}
+
+.step-slide-exit {
+  animation: slideOut 200ms ease-in both;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+/* Step card description accordion */
+.step-desc-enter {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+.step-desc-enter-active {
+  max-height: 200px;
+  opacity: 1;
+  transition: max-height 400ms ease-out, opacity 300ms ease-out;
+}
+

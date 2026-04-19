@@ -15,6 +15,14 @@ const NotFoundPage = lazy(() =>
     import('./features/tickets/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
 );
 
+const AviLandingPage = lazy(() =>
+    import('./features/avi/pages/AviLandingPage').then((m) => ({ default: m.AviLandingPage }))
+);
+
+const AviStepPage = lazy(() =>
+    import('./features/avi/pages/AviStepPage').then((m) => ({ default: m.AviStepPage }))
+);
+
 export const mainRoutes: RouteObject[] = [
     {
         path: '/',
@@ -34,6 +42,8 @@ export const mainRoutes: RouteObject[] = [
             { path: 'affiliation', element: <DashboardPage /> },
             { path: 'agence', element: <DashboardPage /> },
             { path: 'parametres', element: <DashboardPage /> },
+            { path: 'avi', element: <AviLandingPage /> },
+            { path: 'ave/:id', element: <AviStepPage /> },
             { path: '*', element: <NotFoundPage /> },
         ],
     },

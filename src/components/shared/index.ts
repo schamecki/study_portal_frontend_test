@@ -4,3 +4,6 @@ export { Modal } from './Modal';
 export { Stepper } from './Stepper';
 export { Loader } from './Loader';
 export { AuthError } from './AuthError';
+export { PhoneInput } from './PhoneInput';
+export { FileInput } from './FileInput';
+export { DateInput } from './DateInput';
