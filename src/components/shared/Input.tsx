@@ -22,10 +22,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={`
-              w-full px-4 py-2.5 text-sm
-              bg-card border border-light rounded-lg
-              text-primary placeholder-muted
-              focus:outline-none focus:ring-2 focus:ring-boaz-blue-light/30 focus:border-boaz-blue-light
+              w-full px-4 py-3 text-sm
+              bg-[#F8F9FB] border border-[#F0F0F5] rounded-lg
+              text-primary placeholder-[#9CA3AF]
+              focus:outline-none focus:ring-2 focus:ring-boaz-blue-light/20 focus:border-boaz-blue-light
               transition-all duration-200
               disabled:bg-gray-50 disabled:text-muted
               ${icon ? 'pr-10' : ''}

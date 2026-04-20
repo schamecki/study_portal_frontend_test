@@ -42,7 +42,7 @@ export const FileInput = ({
       <div
         className={`
           flex items-center border rounded-lg overflow-hidden transition-all duration-200
-          ${error ? 'border-error' : 'border-light'}
+          ${error ? 'border-error' : 'border-[#F0F0F5]'}
           ${disabled ? 'opacity-60' : ''}
         `}
       >
@@ -51,9 +51,9 @@ export const FileInput = ({
           type="button"
           onClick={() => !disabled && inputRef.current?.click()}
           className={`
-            shrink-0 px-4 py-2.5 text-sm font-medium
-            bg-gray-100 text-primary border-r border-light
-            hover:bg-gray-200 transition-colors duration-200
+            shrink-0 px-4 py-3 text-sm font-medium
+            bg-[#E5E7EB] text-primary border-r border-[#F0F0F5]
+            hover:bg-gray-300 transition-colors duration-200
             cursor-pointer
             ${disabled ? 'cursor-not-allowed' : ''}
           `}
@@ -62,11 +62,11 @@ export const FileInput = ({
         </button>
 
         {/* File name display */}
-        <div className="flex-1 px-4 py-2.5 text-sm truncate">
+        <div className="flex-1 px-4 py-3 text-sm truncate bg-[#F8F9FB]">
           {displayName ? (
             <span className="text-primary">{displayName}</span>
           ) : (
-            <span className="text-muted">{placeholder}</span>
+            <span className="text-[#9CA3AF]">{placeholder}</span>
           )}
         </div>
 

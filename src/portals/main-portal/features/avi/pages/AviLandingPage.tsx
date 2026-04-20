@@ -17,12 +17,12 @@ export const AviLandingPage = () => {
     if (allDone) {
       // All steps done → could submit or finalize
       // For now, navigate to last page
-      navigate('/ave/4');
+      navigate('/avi/4');
       return;
     }
 
     const pageId = getFirstIncompletePageId();
-    navigate(`/ave/${pageId}`);
+    navigate(`/avi/${pageId}`);
   };
 
   return (

@@ -1,9 +1,8 @@
 import { useEffect, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './Button';
 
-// ---- Modal types matching Figma pop-ups ----
-
-type ModalVariant = 'confirm' | 'success' | 'error' | 'warning';
+type ModalVariant = 'confirm' | 'success' | 'error' | 'warning' | 'none';
 
 interface ModalProps {
   open: boolean;
@@ -16,16 +15,17 @@ interface ModalProps {
   cancelLabel?: string;
   onConfirm?: () => void;
   children?: ReactNode;
+  maxWidth?: string; // Permet de surcharger la largeur (ex: max-w-5xl)
 }
 
-const variantConfig: Record<ModalVariant, {
+const variantConfig: Record<Exclude<ModalVariant, 'none'>, {
   icon: ReactNode;
   titleColor: string;
   defaultTitle: string;
 }> = {
   confirm: {
     icon: (
-      <div className="w-16 h-16 rounded-full bg-yellow-300 flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 rounded-full bg-yellow-300 flex items-center justify-center mx-auto shadow-lg shadow-yellow-100">
         <span className="text-white text-3xl font-bold">!</span>
       </div>
     ),
@@ -80,6 +80,7 @@ export const Modal = ({
   cancelLabel,
   onConfirm,
   children,
+  maxWidth = 'max-w-md',
 }: ModalProps) => {
   useEffect(() => {
     if (open) {
@@ -94,20 +95,30 @@ export const Modal = ({
 
   if (!open) return null;
 
-  const config = variantConfig[variant];
+  const config = variant !== 'none' ? variantConfig[variant] : null;
   const showCancel = variant === 'confirm' || variant === 'warning';
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {/* Backdrop avec flou (glassmorphism) */}
+      <div 
+        className="absolute inset-0 bg-black/40 backdrop-blur-md animate-[fadeIn_200ms_ease-out]" 
+        onClick={onClose} 
+      />
 
-      {/* Modal content */}
-      <div className="relative bg-white rounded-2xl shadow-modal p-8 w-full max-w-md mx-4 text-center animate-[fadeIn_200ms_ease-out]">
+      {/* Contenu de la modale */}
+      <div 
+        className={`
+          relative bg-white rounded-3xl shadow-2xl p-6 md:p-8 
+          w-full ${maxWidth} mx-auto 
+          animate-[modalIn_300ms_cubic-bezier(0.16,1,0.3,1)]
+          max-h-[90vh] overflow-y-auto
+        `}
+      >
         {children ? (
           children
-        ) : (
-          <>
+        ) : config ? (
+          <div className="text-center">
             <div className="mb-4">{config.icon}</div>
 
             <h3 className={`text-xl font-bold mb-2 ${config.titleColor}`}>
@@ -135,9 +146,11 @@ export const Modal = ({
                 {confirmLabel || (variant === 'error' ? 'REESSAYER' : 'Confirmer')}
               </Button>
             </div>
-          </>
-        )}
+          </div>
+        ) : null}
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };

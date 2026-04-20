@@ -7,14 +7,23 @@ interface StepperProps {
   steps: Step[];
   currentStep: number;
   orientation?: 'horizontal' | 'vertical';
+  startAt?: number;
+  completedSteps?: number[];
 }
 
-export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: StepperProps) => {
+export const Stepper = ({ 
+  steps, 
+  currentStep, 
+  orientation = 'horizontal', 
+  startAt = 1,
+  completedSteps = [] 
+}: StepperProps) => {
   if (orientation === 'vertical') {
     return (
       <div className="flex flex-col gap-0">
         {steps.map((step, index) => {
-          const isCompleted = index < currentStep;
+          const globalStepId = startAt + index;
+          const isCompleted = completedSteps.includes(globalStepId) || index < currentStep;
           const isActive = index === currentStep;
 
           return (
@@ -25,9 +34,11 @@ export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: Step
                   className={`
                     w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0
                     transition-colors duration-300
-                    ${isCompleted ? 'bg-boaz-blue-light text-white' : ''}
-                    ${isActive ? 'border-3 border-boaz-blue-light text-boaz-blue-light bg-white' : ''}
-                    ${!isCompleted && !isActive ? 'border-2 border-gray-300 text-muted bg-white' : ''}
+                    ${isCompleted 
+                      ? 'bg-boaz-blue-light text-white' 
+                      : isActive 
+                        ? 'border-3 border-boaz-blue-light text-boaz-blue-light bg-white' 
+                        : 'border-2 border-gray-300 text-muted bg-white'}
                   `}
                 >
                   {isCompleted ? (
@@ -35,7 +46,7 @@ export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: Step
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
-                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <span>{String(startAt + index).padStart(2, '0')}</span>
                   )}
                 </div>
                 {index < steps.length - 1 && (
@@ -63,7 +74,8 @@ export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: Step
   return (
     <div className="flex items-center justify-center w-full">
       {steps.map((step, index) => {
-        const isCompleted = index < currentStep;
+        const globalStepId = startAt + index;
+        const isCompleted = completedSteps.includes(globalStepId) || index < currentStep;
         const isActive = index === currentStep;
 
         return (
@@ -74,9 +86,11 @@ export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: Step
                 className={`
                   w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
                   transition-colors duration-300
-                  ${isCompleted ? 'bg-boaz-blue-light text-white' : ''}
-                  ${isActive ? 'border-3 border-boaz-blue-light text-boaz-blue-light bg-white' : ''}
-                  ${!isCompleted && !isActive ? 'border-2 border-gray-300 text-muted bg-white' : ''}
+                  ${isCompleted 
+                    ? 'bg-boaz-blue-light text-white' 
+                    : isActive 
+                      ? 'border-3 border-boaz-blue-light text-boaz-blue-light bg-white' 
+                      : 'border-2 border-gray-300 text-muted bg-white'}
                 `}
               >
                 {isCompleted ? (
@@ -84,7 +98,7 @@ export const Stepper = ({ steps, currentStep, orientation = 'horizontal' }: Step
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
-                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <span>{String(startAt + index).padStart(2, '0')}</span>
                 )}
               </div>
 

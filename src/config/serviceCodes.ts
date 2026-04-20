@@ -6,7 +6,7 @@ interface ServiceCode {
 const serviceCodes : ServiceCode[] = [
     {
         code: 'SERVICE_AVI',
-        path: '/services/avi'
+        path: '/avi'
     },
     {
         code: 'SERVICE_AL',

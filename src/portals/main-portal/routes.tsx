@@ -43,7 +43,7 @@ export const mainRoutes: RouteObject[] = [
             { path: 'agence', element: <DashboardPage /> },
             { path: 'parametres', element: <DashboardPage /> },
             { path: 'avi', element: <AviLandingPage /> },
-            { path: 'ave/:id', element: <AviStepPage /> },
+            { path: 'avi/:id', element: <AviStepPage /> },
             { path: '*', element: <NotFoundPage /> },
         ],
     },
