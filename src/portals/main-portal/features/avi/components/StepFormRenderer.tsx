@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Input, PhoneInput, FileInput, DateInput, Button } from '../../../../../components/shared';
+import { Input, Button } from '../../../../../components/shared';
 import { useAviStore } from '../../../../../store/avi.store';
-import { useAppStore } from '../../../../../store/app.store'
-import AccordionItem from "./AccordionItem.tsx";
-import ContractContent from "./ContractContent.tsx";
-import SignatureModal from "./SignatureModal.tsx";
-import {postAviFirstStep} from "../../../../../services/api/avi.api.ts";
+import { AviStep1 } from './AviStep1';
+import { AviStep2 } from './AviStep2';
+import { AviStep3 } from './AviStep3';
+import { AviStep4 } from './AviStep4';
+import { AviStep5 } from './AviStep5';
 
 interface StepFormRendererProps {
   stepId: number;
@@ -29,12 +28,9 @@ export const StepFormRenderer = ({
 }: StepFormRendererProps) => {
   const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const navigate = useNavigate();
   const { formData: allFormData } = useAviStore();
 
   const step1Data = allFormData[1] || {};
-
-  const setLoading = useAppStore(state => state.setLoading);
 
   const updateField = (field: string, value: unknown) => {
     onFormDataChange({ ...formData, [field]: value });
@@ -44,24 +40,10 @@ export const StepFormRenderer = ({
     return (formData[field] as string) || '';
   };
 
-  const handleContractSigne = async (data: string) => {
-      updateField('signature', data);
-      setLoading(true)
-      setIsSignatureModalOpen(false);
-      try {
-          await postAviFirstStep(formData as unknown as FormData)
-      }
-      catch (error) {
-          console.error(error);
-      }
-      if (onComplete) onComplete();
-      setShowSuccess(true);
-      setLoading(false)
-  }
-
   // Reset states when step changes
   useEffect(() => {
     if (setCustomFooter) setCustomFooter(null);
+    //setShowSuccess(false); // Reset success state on step change
   }, [stepId, setCustomFooter]);
 
   // Handle custom footer for Step 3 (Contract)
@@ -89,312 +71,22 @@ export const StepFormRenderer = ({
         </div>
       );
     } else if (stepId === 3 && setCustomFooter && showSuccess) {
-        // Hide footer on success screen
         setCustomFooter(<div />);
     }
   }, [stepId, setCustomFooter, formData.signature, onNext, showSuccess]);
 
-  // --- Step Renderers ---
-
-  const renderStep1 = () => (
-    <div className="step-form-content">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-        <Input
-          placeholder="Nom"
-          value={getFieldValue('lastName')}
-          onChange={(e) => updateField('lastName', e.target.value)}
-          error={errors.lastName}
-        />
-        <Input
-          placeholder="Numéro de passeport"
-          value={getFieldValue('passportNumber')}
-          onChange={(e) => updateField('passportNumber', e.target.value)}
-          error={errors.passportNumber}
-        />
-        <Input
-          placeholder="Prénom"
-          value={getFieldValue('firstName')}
-          onChange={(e) => updateField('firstName', e.target.value)}
-          error={errors.firstName}
-        />
-        <DateInput
-          label="Date de délivrance du passeport"
-          value={getFieldValue('passportIssueDate')}
-          onChange={(e) => updateField('passportIssueDate', e.target.value)}
-          error={errors.passportIssueDate}
-        />
-        <Input
-          placeholder="Email"
-          type="email"
-          value={getFieldValue('email')}
-          onChange={(e) => updateField('email', e.target.value)}
-          error={errors.email}
-        />
-        <DateInput
-          label="Date d'expiration du passeport"
-          value={getFieldValue('passportExpiryDate')}
-          onChange={(e) => updateField('passportExpiryDate', e.target.value)}
-          error={errors.passportExpiryDate}
-        />
-        <PhoneInput
-          label="Numéro de téléphone"
-          value={getFieldValue('phone')}
-          onChange={(val) => updateField('phone', val)}
-          error={errors.phone}
-        />
-        <FileInput
-          label="Scan du passeport"
-          fileName={getFieldValue('passportScanName')}
-          onChange={(file) => {
-            updateField('passportScan', file);
-            updateField('passportScanName', file?.name || '');
-          }}
-          accept=".pdf,.jpg,.jpeg,.png"
-          error={errors.passportScan}
-        />
-      </div>
-    </div>
-  );
-
-  const renderStep2 = () => (
-    <div className="step-form-content max-w-xl mx-auto py-4">
-      <div className="flex flex-col gap-y-6">
-        <Input
-          placeholder="Nom de l'établissement d'accueil"
-          value={getFieldValue('hostInstitution')}
-          onChange={(e) => updateField('hostInstitution', e.target.value)}
-          error={errors.hostInstitution}
-        />
-        <Input
-          placeholder="Titre de la formation"
-          value={getFieldValue('trainingTitle')}
-          onChange={(e) => updateField('trainingTitle', e.target.value)}
-          error={errors.trainingTitle}
-        />
-        <Input
-          placeholder="Ville"
-          value={getFieldValue('city')}
-          onChange={(e) => updateField('city', e.target.value)}
-          error={errors.city}
-        />
-        <DateInput
-          label="Date de début de la formation"
-          value={getFieldValue('trainingStartDate')}
-          onChange={(e) => updateField('trainingStartDate', e.target.value)}
-          error={errors.trainingStartDate}
-        />
-        <FileInput
-          label="Attestation d'inscription / Lettre d'admission"
-          fileName={getFieldValue('admissionLetterName')}
-          placeholder="Aucun fichier sélectionné"
-          onChange={(file) => {
-            updateField('admissionLetter', file);
-            updateField('admissionLetterName', file?.name || '');
-          }}
-          accept=".pdf,.jpg,.jpeg,.png"
-          error={errors.admissionLetter}
-        />
-      </div>
-    </div>
-  );
-
-  const renderStep3 = () => {
-    if (showSuccess) {
-      return (
-        <div className="step-form-content flex flex-col items-center justify-center py-20 animate-page-in">
-          <div className="w-32 h-32 bg-[#10B981] rounded-full flex items-center justify-center mb-8 shadow-xl shadow-green-100">
-             <svg className="w-16 h-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-             </svg>
-          </div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center">Demande envoyée<br/>avec succès</h2>
-          <div className="mt-12">
-            <Button
-                variant="primary"
-                size="lg"
-                className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
-                onClick={() => navigate('/avi')}
-            >
-                Aller à mes demandes
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="step-form-content max-w-2xl mx-auto py-4 animate-page-in">
-        <h2 className="text-2xl font-semibold text-center mb-8">Mon contrat</h2>
-
-        <div className="bg-white border border-[#E5E7EB] rounded-lg p-8 shadow-sm overflow-y-auto max-h-[600px]">
-          <ContractContent formData={step1Data} />
-
-          {(formData.signature as string || null) && (
-            <div className="mt-8 pt-4 border-t border-gray-100 flex justify-end">
-              <div className="text-right">
-                <p className="text-[8px] text-gray-400 mb-1">Signé numériquement le {new Date().toLocaleDateString()}</p>
-                <img src={formData.signature as string} alt="Signature" className="h-12 object-contain" />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <SignatureModal
-          open={isSignatureModalOpen}
-          onClose={() => setIsSignatureModalOpen(false)}
-          onSave={handleContractSigne}
-          contractContent={<ContractContent formData={step1Data} />}
-        />
-      </div>
-    );
-  };
-
-    const renderStep4 = () => (
-        <div className="step-form-content max-w-2xl mx-auto py-10 animate-page-in">
-            <h2 className="text-2xl font-bold text-center mb-10 text-gray-800">Sélectionnez votre principe de
-                paiement</h2>
-            <div className="flex flex-col">
-                <AccordionItem
-                    title="Paiement total"
-                    description="Choisissez cette option si vous souhaitez payer la totalité des frais."
-                    isActive={getFieldValue('paymentPrinciple') === 'total'}
-                    onClick={() => updateField('paymentPrinciple', 'total')}
-                />
-                <AccordionItem
-                    title="Paiement par financement"
-                    description="Choisissez cette option si vous avez souscrits à un financement"
-                    isActive={getFieldValue('paymentPrinciple') === 'financing'}
-                    onClick={() => updateField('paymentPrinciple', 'financing')}
-                />
-            </div>
-            {errors.paymentPrinciple && <p className="text-error text-center mt-4">{errors.paymentPrinciple}</p>}
-        </div>
-    );
-
-    const renderStep5 = () => (
-        <div className="step-form-content max-w-2xl mx-auto py-10 animate-page-in">
-            <h2 className="text-2xl font-bold text-center mb-10 text-gray-800">Sélectionnez votre mode de paiement</h2>
-            <div className="flex flex-col">
-                <AccordionItem
-                    title="Dépôt Bancaire"
-          description="Effectuez un dépôt sur le compte Boaz Study, puis téléchargez la preuve de paiement directement dans l'application."
-          isActive={getFieldValue('paymentMethod') === 'bank_deposit'}
-          onClick={() => updateField('paymentMethod', 'bank_deposit')}
-        />
-        <AccordionItem
-          title="Virement Bancaire Direct"
-          description="Effectuez un virement bancaire directement sur le compte Boaz Study, puis téléchargez la preuve de paiement dans l'application."
-          isActive={getFieldValue('paymentMethod') === 'bank_transfer'}
-          onClick={() => updateField('paymentMethod', 'bank_transfer')}
-        />
-        <AccordionItem
-          title="Mobile Money"
-          description="Effectuez un paiement via Mobile Money sur le compte Boaz Study, puis téléchargez la preuve de paiement dans l'application."
-          isActive={getFieldValue('paymentMethod') === 'mobile_money'}
-          onClick={() => updateField('paymentMethod', 'mobile_money')}
-        />
-      </div>
-      {errors.paymentMethod && <p className="text-error text-center mt-4">{errors.paymentMethod}</p>}
-    </div>
-  );
-
-  const renderStep9 = () => {
-    return (
-      <div className="step-form-content max-w-xl mx-auto py-4">
-          <div className="flex flex-col gap-y-6">
-              <Input
-                  placeholder="Montant mensuel souhaité (en EUR)"
-                  type="number"
-                  value={getFieldValue('monthlyAllocation')}
-                  onChange={(e) => updateField('monthlyAllocation', e.target.value)}
-                  error={errors.monthlyAllocation}
-              />
-              <Input
-                  placeholder="Montant total annuel (en EUR)"
-                  type="number"
-                  value={getFieldValue('annualAmount')}
-                  onChange={(e) => updateField('annualAmount', e.target.value)}
-                  error={errors.annualAmount}
-              />
-              <Input
-                  placeholder="Source de financement"
-                  value={getFieldValue('sourceOfFunds')}
-                  onChange={(e) => updateField('sourceOfFunds', e.target.value)}
-                  error={errors.sourceOfFunds}
-              />
-          </div>
-      </div>
-    );
-  };
-
-  const renderStep10 = () => {
-    if (showSuccess) {
-      return (
-        <div className="step-form-content flex flex-col items-center justify-center py-20 animate-page-in">
-          <div className="w-32 h-32 bg-[#10B981] rounded-full flex items-center justify-center mb-8 shadow-xl shadow-green-100">
-             <svg className="w-16 h-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-             </svg>
-          </div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center">Demande envoyée<br/>avec succès</h2>
-          <div className="mt-12">
-            <Button
-                variant="primary"
-                size="lg"
-                className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
-                onClick={() => navigate('/avi')}
-            >
-                Aller à mes demandes
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="step-form-content max-w-xl mx-auto py-4">
-        <h2 className="text-2xl font-semibold text-center mb-8 text-gray-800">Dépôt de preuve</h2>
-        <div className="flex flex-col gap-y-6">
-            <FileInput
-              label="Preuve de paiement"
-              fileName={getFieldValue('paymentProofName')}
-              onChange={(file) => {
-                updateField('paymentProof', file);
-                updateField('paymentProofName', file?.name || '');
-              }}
-              accept=".pdf,.jpg,.jpeg,.png"
-              error={errors.paymentProof}
-            />
-            <div className="mt-8 flex justify-center">
-              <Button
-                variant="primary"
-                size="lg"
-                className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
-                onClick={() => {
-                  if (getFieldValue('paymentProofName')) {
-                    if (onComplete) onComplete();
-                    setShowSuccess(true);
-                  }
-                }}
-              >
-                Terminer et soumettre
-              </Button>
-            </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Default renderer for placeholders
+  // Default renderer for placeholders (Steps 6-10)
   const renderPlaceholder = () => {
     const placeholderFields: Record<number, { fields: { placeholder: string; key: string }[] }> = {
       6: { fields: [{ placeholder: 'Nom de la banque', key: 'bankName' }, { placeholder: 'Code SWIFT / BIC', key: 'swiftCode' }] },
       7: { fields: [{ placeholder: 'IBAN', key: 'iban' }, { placeholder: 'RIB', key: 'rib' }] },
       8: { fields: [{ placeholder: 'Numéro de proforma', key: 'proformaNumber' }, { placeholder: 'Montant total', key: 'totalAmount' }] },
+      9: { fields: [{ placeholder: 'Montant mensuel', key: 'monthlyAllocation' }, { placeholder: 'Source de fonds', key: 'sourceOfFunds' }] },
+      10: { fields: [{ placeholder: 'Preuve de paiement', key: 'paymentProof' }] },
     };
 
     const config = placeholderFields[stepId];
-    if (!config) return <p className="text-muted text-sm text-center py-10">Formulaire en cours de développement...</p>;
+    if (!config) return <div className="py-20 text-center text-muted">Formulaire en cours de développement...</div>;
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
@@ -412,13 +104,28 @@ export const StepFormRenderer = ({
   };
 
   switch (stepId) {
-    case 1: return renderStep1();
-    case 2: return renderStep2();
-    case 3: return renderStep3();
-    case 4: return renderStep4();
-    case 5: return renderStep5();
-    case 9: return renderStep9();
-    case 10: return renderStep10();
-    default: return <div className="step-form-content">{renderPlaceholder()}</div>;
+    case 1: 
+      return <AviStep1 formData={formData} errors={errors} onUpdateField={updateField} />;
+    case 2: 
+      return <AviStep2 formData={formData} errors={errors} onUpdateField={updateField} />;
+    case 3: 
+      return (
+        <AviStep3 
+          formData={formData} 
+          step1Data={step1Data} 
+          showSuccess={showSuccess} 
+          isSignatureModalOpen={isSignatureModalOpen}
+          onUpdateField={updateField}
+          onSetIsSignatureModalOpen={setIsSignatureModalOpen}
+          onSetShowSuccess={setShowSuccess}
+          onComplete={onComplete}
+        />
+      );
+    case 4: 
+      return <AviStep4 formData={formData} errors={errors} onUpdateField={updateField} />;
+    case 5: 
+      return <AviStep5 formData={formData} errors={errors} onUpdateField={updateField} />;
+    default: 
+      return <div className="step-form-content">{renderPlaceholder()}</div>;
   }
 };
