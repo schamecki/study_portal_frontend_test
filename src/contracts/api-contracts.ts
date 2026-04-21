@@ -179,5 +179,11 @@ export const API_ENDPOINTS = {
         BASE: '/api/services',
         BY_ID: (id: string) => `/api/services/${id}`,
         MARK_READ: (id: string) => `/api/services/${id}/read`,
+    },
+    AVI: {
+        BASE: '/api/avi',
+        STEP1: '/api/avi/firstStep',
+        BY_ID: (id: string) => `/api/services/${id}`,
+        MARK_READ: (id: string) => `/api/services/${id}/read`,
     }
 } as const;

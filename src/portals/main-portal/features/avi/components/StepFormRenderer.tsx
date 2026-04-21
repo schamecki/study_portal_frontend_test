@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, PhoneInput, FileInput, DateInput, Button } from '../../../../../components/shared';
-import { SignatureModal, ContractContent } from './SignatureModal';
+import { useAviStore } from '../../../../../store/avi.store';
+import { useAppStore } from '../../../../../store/app.store'
+import AccordionItem from "./AccordionItem.tsx";
+import ContractContent from "./ContractContent.tsx";
+import SignatureModal from "./SignatureModal.tsx";
+import {postAviFirstStep} from "../../../../../services/api/avi.api.ts";
 
 interface StepFormRendererProps {
   stepId: number;
@@ -13,60 +18,9 @@ interface StepFormRendererProps {
   errors?: Record<string, string>;
 }
 
-// Reusable Accordion Component for Steps 4 & 5
-const AccordionItem = ({ 
-  title, 
-  description, 
-  isActive, 
-  onClick 
-}: { 
-  title: string; 
-  description: string; 
-  isActive: boolean; 
-  onClick: () => void;
-}) => (
-  <div 
-    className={`
-      mb-4 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden
-      ${isActive 
-        ? 'border-boaz-blue-light bg-white shadow-lg shadow-blue-50' 
-        : 'border-gray-100 bg-white hover:border-gray-200 shadow-sm'}
-    `}
-    onClick={onClick}
-  >
-    <div className="flex items-center justify-between p-5 md:p-6">
-      <div className="flex items-center gap-4">
-        {isActive && <div className="w-1 h-6 bg-boaz-blue-light rounded-full" />}
-        <span className={`text-lg font-semibold ${isActive ? 'text-boaz-blue-light' : 'text-gray-700'}`}>
-          {title}
-        </span>
-      </div>
-      <svg 
-        className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${isActive ? 'rotate-180 text-boaz-blue-light' : ''}`} 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
-    
-    <div 
-      className={`
-        transition-all duration-300 ease-in-out
-        ${isActive ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}
-      `}
-    >
-      <div className="px-6 pb-6 text-blue-500 italic text-sm leading-relaxed">
-        {description}
-      </div>
-    </div>
-  </div>
-);
-
-export const StepFormRenderer = ({ 
-  stepId, 
-  formData, 
+export const StepFormRenderer = ({
+  stepId,
+  formData,
   onFormDataChange,
   setCustomFooter,
   onNext,
@@ -76,7 +30,12 @@ export const StepFormRenderer = ({
   const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
-  
+  const { formData: allFormData } = useAviStore();
+
+  const step1Data = allFormData[1] || {};
+
+  const setLoading = useAppStore(state => state.setLoading);
+
   const updateField = (field: string, value: unknown) => {
     onFormDataChange({ ...formData, [field]: value });
   };
@@ -85,10 +44,24 @@ export const StepFormRenderer = ({
     return (formData[field] as string) || '';
   };
 
+  const handleContractSigne = async (data: string) => {
+      updateField('signature', data);
+      setLoading(true)
+      setIsSignatureModalOpen(false);
+      try {
+          await postAviFirstStep(formData as unknown as FormData)
+      }
+      catch (error) {
+          console.error(error);
+      }
+      if (onComplete) onComplete();
+      setShowSuccess(true);
+      setLoading(false)
+  }
+
   // Reset states when step changes
   useEffect(() => {
     if (setCustomFooter) setCustomFooter(null);
-    //setShowSuccess(false);
   }, [stepId, setCustomFooter]);
 
   // Handle custom footer for Step 3 (Contract)
@@ -226,7 +199,6 @@ export const StepFormRenderer = ({
   );
 
   const renderStep3 = () => {
-      console.log(showSuccess, 'as show succèss')
     if (showSuccess) {
       return (
         <div className="step-form-content flex flex-col items-center justify-center py-20 animate-page-in">
@@ -237,9 +209,9 @@ export const StepFormRenderer = ({
           </div>
           <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center">Demande envoyée<br/>avec succès</h2>
           <div className="mt-12">
-            <Button 
-                variant="primary" 
-                size="lg" 
+            <Button
+                variant="primary"
+                size="lg"
                 className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
                 onClick={() => navigate('/avi')}
             >
@@ -253,11 +225,11 @@ export const StepFormRenderer = ({
     return (
       <div className="step-form-content max-w-2xl mx-auto py-4 animate-page-in">
         <h2 className="text-2xl font-semibold text-center mb-8">Mon contrat</h2>
-        
+
         <div className="bg-white border border-[#E5E7EB] rounded-lg p-8 shadow-sm overflow-y-auto max-h-[600px]">
-          <ContractContent />
-          
-          {formData.signature && (
+          <ContractContent formData={step1Data} />
+
+          {(formData.signature as string || null) && (
             <div className="mt-8 pt-4 border-t border-gray-100 flex justify-end">
               <div className="text-right">
                 <p className="text-[8px] text-gray-400 mb-1">Signé numériquement le {new Date().toLocaleDateString()}</p>
@@ -267,16 +239,11 @@ export const StepFormRenderer = ({
           )}
         </div>
 
-        <SignatureModal 
+        <SignatureModal
           open={isSignatureModalOpen}
           onClose={() => setIsSignatureModalOpen(false)}
-          onSave={(data) => {
-            updateField('signature', data);
-            setIsSignatureModalOpen(false);
-            if (onComplete) onComplete();
-            setShowSuccess(true);
-          }}
-          contractContent={<ContractContent />}
+          onSave={handleContractSigne}
+          contractContent={<ContractContent formData={step1Data} />}
         />
       </div>
     );
@@ -314,13 +281,13 @@ export const StepFormRenderer = ({
           isActive={getFieldValue('paymentMethod') === 'bank_deposit'}
           onClick={() => updateField('paymentMethod', 'bank_deposit')}
         />
-        <AccordionItem 
+        <AccordionItem
           title="Virement Bancaire Direct"
           description="Effectuez un virement bancaire directement sur le compte Boaz Study, puis téléchargez la preuve de paiement dans l'application."
           isActive={getFieldValue('paymentMethod') === 'bank_transfer'}
           onClick={() => updateField('paymentMethod', 'bank_transfer')}
         />
-        <AccordionItem 
+        <AccordionItem
           title="Mobile Money"
           description="Effectuez un paiement via Mobile Money sur le compte Boaz Study, puis téléchargez la preuve de paiement dans l'application."
           isActive={getFieldValue('paymentMethod') === 'mobile_money'}
@@ -371,9 +338,9 @@ export const StepFormRenderer = ({
           </div>
           <h2 className="text-4xl font-bold text-gray-800 mb-4 text-center">Demande envoyée<br/>avec succès</h2>
           <div className="mt-12">
-            <Button 
-                variant="primary" 
-                size="lg" 
+            <Button
+                variant="primary"
+                size="lg"
                 className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
                 onClick={() => navigate('/avi')}
             >
@@ -399,9 +366,9 @@ export const StepFormRenderer = ({
               error={errors.paymentProof}
             />
             <div className="mt-8 flex justify-center">
-              <Button 
-                variant="primary" 
-                size="lg" 
+              <Button
+                variant="primary"
+                size="lg"
                 className="bg-boaz-blue-light hover:bg-boaz-blue px-10 rounded-xl"
                 onClick={() => {
                   if (getFieldValue('paymentProofName')) {
