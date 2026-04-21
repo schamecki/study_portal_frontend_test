@@ -39,10 +39,10 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
         {/* Vertical connector line */}
         {!isLast && (
           <div
-            className={`w-[2px] transition-colors duration-300 ${
+            className={`w-[2px] transition-all duration-300 ease-in-out ${
               isCompleted ? 'bg-boaz-blue-light' : 'bg-boaz-blue-light/25'
             }`}
-            style={{ height: active ? '100%' : '100%', minHeight: active ? '80px' : '28px' }}
+            style={{ minHeight: active ? '80px' : '28px', height: '100%' }}
           />
         )}
       </div>
@@ -90,12 +90,14 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
         {/* Expandable description (only shows for active step) */}
         <div
           className={`
-            overflow-hidden transition-all duration-400 ease-out
-            ${active ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'}
+            grid transition-all duration-300 ease-in-out
+            ${active ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}
           `}
         >
-          <div className="px-4 py-4 bg-white text-sm text-gray-500 leading-relaxed">
-            {step.description}
+          <div className="overflow-hidden">
+            <div className="px-4 py-4 bg-white text-sm text-gray-500 leading-relaxed">
+              {step.description}
+            </div>
           </div>
         </div>
       </div>
