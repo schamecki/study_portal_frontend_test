@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { usePermissions } from '../hooks/usePermissions';
+import { AccessDenied } from './shared';
 
 interface ProtectedComponentProps {
     /** Children to render when the user has the required permissions. */
@@ -11,7 +12,7 @@ interface ProtectedComponentProps {
     /** If set, user must hold at least ONE of these permission scopes. */
     anyPermissions?: string[];
 
-    /** Optional fallback — defaults to null (element absent from DOM). */
+    /** Optional fallback — defaults to AccessDenied. */
     fallback?: ReactNode;
 }
 
@@ -19,7 +20,7 @@ export const ProtectedComponent = ({
                                        children,
                                        requiredPermissions,
                                        anyPermissions,
-                                       fallback = null,
+                                       fallback = <AccessDenied />,
                                    }: ProtectedComponentProps) => {
     const { hasAllAuthorities, hasAnyAuthority } = usePermissions();
 

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1776742141567" clover="3.2.0">
+  <project timestamp="1776742141568" name="All files">
+    <metrics statements="96" coveredstatements="39" conditionals="180" coveredconditionals="26" methods="35" coveredmethods="10" elements="311" coveredelements="75" complexity="0" loc="96" ncloc="96" packages="3" files="13" classes="13"/>
+    <package name="components">
+      <metrics statements="9" coveredstatements="8" conditionals="13" coveredconditionals="12" methods="1" coveredmethods="1"/>
+      <file name="ProtectedComponent.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\ProtectedComponent.tsx">
+        <metrics statements="9" coveredstatements="8" conditionals="13" coveredconditionals="12" methods="1" coveredmethods="1"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="28" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="29" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="35" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="36" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.shared">
+      <metrics statements="76" coveredstatements="20" conditionals="165" coveredconditionals="12" methods="26" coveredmethods="2"/>
+      <file name="AccessDenied.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\AccessDenied.tsx">
+        <metrics statements="5" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="3" coveredmethods="1"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+      </file>
+      <file name="AuthError.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\AuthError.tsx">
+        <metrics statements="2" coveredstatements="1" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+      </file>
+      <file name="Button.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\Button.tsx">
+        <metrics statements="4" coveredstatements="4" conditionals="13" coveredconditionals="10" methods="1" coveredmethods="1"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="40" count="2" type="stmt"/>
+      </file>
+      <file name="DateInput.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\DateInput.tsx">
+        <metrics statements="4" coveredstatements="2" conditionals="10" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+      </file>
+      <file name="FileInput.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\FileInput.tsx">
+        <metrics statements="11" coveredstatements="1" conditionals="26" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="27" count="0" type="cond" truecount="0" falsecount="5"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="31" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
+      </file>
+      <file name="Input.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\Input.tsx">
+        <metrics statements="4" coveredstatements="2" conditionals="13" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="11" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+      </file>
+      <file name="Loader.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\Loader.tsx">
+        <metrics statements="3" coveredstatements="2" conditionals="3" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="12" count="1" type="cond" truecount="0" falsecount="1"/>
+        <line num="13" count="0" type="stmt"/>
+      </file>
+      <file name="Modal.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\Modal.tsx">
+        <metrics statements="14" coveredstatements="2" conditionals="32" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="86" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="87" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="96" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="98" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="99" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="155" count="0" type="stmt"/>
+      </file>
+      <file name="PhoneInput.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\PhoneInput.tsx">
+        <metrics statements="17" coveredstatements="2" conditionals="25" coveredconditionals="0" methods="8" coveredmethods="0"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="46" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="64" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="90" count="0" type="stmt"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+      </file>
+      <file name="Stepper.tsx" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\Stepper.tsx">
+        <metrics statements="12" coveredstatements="1" conditionals="39" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="21" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="76" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+      </file>
+      <file name="index.ts" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\components\shared\index.ts">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+    </package>
+    <package name="hooks">
+      <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="8" coveredmethods="7"/>
+      <file name="usePermissions.ts" path="C:\Users\tameu\OneDrive\Desktop\projects\perso\final_boaz_study\src\hooks\usePermissions.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="8" coveredmethods="7"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="5" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="21" count="5" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

@@ -7,3 +7,4 @@ export { AuthError } from './AuthError';
 export { PhoneInput } from './PhoneInput';
 export { FileInput } from './FileInput';
 export { DateInput } from './DateInput';
+export { AccessDenied } from './AccessDenied';
