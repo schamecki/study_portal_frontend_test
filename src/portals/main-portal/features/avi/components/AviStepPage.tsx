@@ -1,0 +1,51 @@
+import { lazy, Suspense } from 'react';
+import type { RouteObject } from 'react-router-dom';
+import {ProtectedComponent} from "../../components/ProtectedComponent.tsx";
+import {MainLayout} from "../../components/Layout/MainLayout.tsx";
+
+const DashboardPageLazy = lazy(() => import('./features/tickets/pages/DashboardPage.tsx').then(m => ({ default: m.DashboardPage })));
+const ProfilePageLazy = lazy(() => import('./features/tickets/pages/ProfilePage.tsx').then(m => ({ default: m.ProfilePage })));
+const NotFoundPageLazy = lazy(() => import('./features/tickets/pages/NotFoundPage.tsx').then(m => ({ default: m.NotFoundPage })));
+const AviLandingPageLazy = lazy(() => import('./features/avi/pages/AviLandingPage.tsx').then(m => ({ default: m.AviLandingPage })));
+const AviStepPageLazy = lazy(() => import('./features/avi/pages/AviStepPage.tsx').then(m => ({ default: m.AviStepPage })));
+
+export const mainRoutes: RouteObject[] = [
+    {
+        path: '/',
+        element: (
+            <ProtectedComponent>
+                <MainLayout />
+            </ProtectedComponent>
+        ),
+        children: [
+            { 
+                index: true, 
+                element: <Suspense fallback={null}><DashboardPageLazy /></Suspense> 
+            },
+            { 
+                path: 'profile', 
+                element: <Suspense fallback={null}><ProfilePageLazy /></Suspense> 
+            },
+            { 
+                path: 'settings', 
+                element: <Suspense fallback={null}><DashboardPageLazy /></Suspense> 
+            },
+            { 
+                path: 'parametres', 
+                element: <Suspense fallback={null}><DashboardPageLazy /></Suspense> 
+            },
+            { 
+                path: 'avi', 
+                element: <Suspense fallback={null}><AviLandingPageLazy /></Suspense> 
+            },
+            { 
+                path: 'avi/:id', 
+                element: <Suspense fallback={null}><AviStepPageLazy /></Suspense> 
+            },
+            { 
+                path: '*', 
+                element: <Suspense fallback={null}><NotFoundPageLazy /></Suspense> 
+            },
+        ],
+    },
+];

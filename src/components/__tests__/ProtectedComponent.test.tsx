@@ -16,10 +16,10 @@ describe('ProtectedComponent', () => {
   it('doit rendre les enfants si l\'utilisateur a la permission requise', () => {
     // Simule un utilisateur avec les droits
     vi.mocked(usePermissions).mockReturnValue({
-      hasAllAuthorities: (req: string[]) => true,
-      hasAnyAuthority: (any: string[]) => true,
+      hasAllAuthorities: () => true,
+      hasAnyAuthority: () => true,
       authUser: { authorities: ['ticket:create'] },
-      hasAuthority: (a: string) => true
+      hasAuthority: () => true
     });
 
     render(
@@ -36,10 +36,10 @@ describe('ProtectedComponent', () => {
   it('doit rendre le fallback AccessDenied par défaut si la permission est absente', () => {
     // Simule un utilisateur sans les droits
     vi.mocked(usePermissions).mockReturnValue({
-      hasAllAuthorities: (req: string[]) => false,
-      hasAnyAuthority: (any: string[]) => false,
+      hasAllAuthorities: () => false,
+      hasAnyAuthority: () => false,
       authUser: { authorities: [] },
-      hasAuthority: (a: string) => false
+      hasAuthority: () => false
     });
 
     render(
@@ -58,10 +58,10 @@ describe('ProtectedComponent', () => {
 
   it('doit rendre un fallback personnalisé si fourni', () => {
     vi.mocked(usePermissions).mockReturnValue({
-      hasAllAuthorities: (req: string[]) => false,
-      hasAnyAuthority: (any: string[]) => false,
+      hasAllAuthorities: () => false,
+      hasAnyAuthority: () => false,
       authUser: { authorities: [] },
-      hasAuthority: (a: string) => false
+      hasAuthority: () => false
     });
 
     render(
@@ -80,10 +80,10 @@ describe('ProtectedComponent', () => {
 
   it('doit valider anyPermissions (AU MOINS UN)', () => {
     vi.mocked(usePermissions).mockReturnValue({
-      hasAllAuthorities: (req: string[]) => false,
-      hasAnyAuthority: (any: string[]) => true,
+      hasAllAuthorities: () => false,
+      hasAnyAuthority: () => true,
       authUser: { authorities: ['ticket:read'] },
-      hasAuthority: (a: string) => a === 'ticket:read'
+      hasAuthority: (a) => a === 'ticket:read'
     });
 
     render(

@@ -3,7 +3,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import { Button, Modal } from '../../../../../components/shared';
 
 // Fix for ESM/CommonJS interop with react-signature-canvas
-const SignaturePad = (SignatureCanvas as any).default || SignatureCanvas;
+const SignaturePad = (SignatureCanvas as unknown as { default: typeof SignatureCanvas }).default || SignatureCanvas;
 
 interface SignatureModalProps {
   open: boolean;

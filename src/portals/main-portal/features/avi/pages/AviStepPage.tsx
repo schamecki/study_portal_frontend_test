@@ -42,7 +42,7 @@ export const AviStepPage = () => {
   }, [pageId]); // Only sync when the page ID changes, not when steps are completed
 
   // Validation Logic
-  const validateStep = (stepId: number, data: Record<string, any>): Record<string, string> => {
+  const validateStep = (stepId: number, data: Record<string, unknown>): Record<string, string> => {
     const errors: Record<string, string> = {};
     const required = (field: string, msg = 'Ce champ est obligatoire') => {
       if (!data[field] || (typeof data[field] === 'string' && data[field].trim() === '')) {
@@ -60,7 +60,7 @@ export const AviStepPage = () => {
         required('email');
         required('phone');
         required('passportScanName', 'Veuillez télécharger un scan de votre passeport');
-        if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email as string)) {
           errors.email = 'Veuillez entrer un email valide';
         }
         break;

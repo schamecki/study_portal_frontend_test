@@ -1,9 +1,9 @@
 import { Input, FileInput, DateInput } from '../../../../../components/shared';
 
 interface AviStep2Props {
-  formData: Record<string, any>;
+  formData: Record<string, unknown>;
   errors: Record<string, string>;
-  onUpdateField: (field: string, value: any) => void;
+  onUpdateField: (field: string, value: unknown) => void;
 }
 
 export const AviStep2 = ({ formData, errors, onUpdateField }: AviStep2Props) => {

@@ -1,9 +1,9 @@
 import AccordionItem from "./AccordionItem.tsx";
 
 interface AviStep4Props {
-  formData: Record<string, any>;
+  formData: Record<string, unknown>;
   errors: Record<string, string>;
-  onUpdateField: (field: string, value: any) => void;
+  onUpdateField: (field: string, value: unknown) => void;
 }
 
 export const AviStep4 = ({ formData, errors, onUpdateField }: AviStep4Props) => {

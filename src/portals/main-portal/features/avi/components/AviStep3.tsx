@@ -6,11 +6,11 @@ import { postAviFirstStep } from "../../../../../services/api/avi.api.ts";
 import { useAppStore } from '../../../../../store/app.store';
 
 interface AviStep3Props {
-  formData: Record<string, any>;
-  step1Data: Record<string, any>;
+  formData: Record<string, unknown>;
+  step1Data: Record<string, unknown>;
   showSuccess: boolean;
   isSignatureModalOpen: boolean;
-  onUpdateField: (field: string, value: any) => void;
+  onUpdateField: (field: string, value: unknown) => void;
   onSetIsSignatureModalOpen: (open: boolean) => void;
   onSetShowSuccess: (show: boolean) => void;
   onComplete?: () => void;

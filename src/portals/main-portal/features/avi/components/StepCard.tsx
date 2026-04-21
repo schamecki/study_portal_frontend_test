@@ -1,4 +1,5 @@
 import type { StepConfig } from '../avi.config';
+import {useState} from "react";
 
 interface StepCardProps {
   step: StepConfig;
@@ -9,6 +10,8 @@ interface StepCardProps {
 }
 
 export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps) => {
+    const [active, setActive] = useState<boolean>(isActive)
+    const handleActiveChange = () => setActive(!active);
   return (
     <div className="flex items-start gap-0" id={`step-card-${step.id}`}>
       {/* Left: Circle + vertical connector line */}
@@ -39,7 +42,7 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
             className={`w-[2px] transition-colors duration-300 ${
               isCompleted ? 'bg-boaz-blue-light' : 'bg-boaz-blue-light/25'
             }`}
-            style={{ height: isActive ? '100%' : '100%', minHeight: isActive ? '80px' : '28px' }}
+            style={{ height: active ? '100%' : '100%', minHeight: active ? '80px' : '28px' }}
           />
         )}
       </div>
@@ -48,7 +51,7 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
       <div
         className={`
           flex-1 rounded-lg border overflow-hidden transition-all duration-300 mb-2
-          ${isActive
+          ${active
             ? 'border-boaz-blue-light shadow-[0_0_0_1px_rgba(59,130,246,0.3)]'
             : 'border-gray-300'
           }
@@ -58,22 +61,22 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
         <div
           className={`
             flex items-center justify-between px-4 py-3 cursor-pointer transition-colors duration-200
-            ${isActive ? 'border-b border-gray-200 bg-white' : 'bg-gray-50/50'}
+            ${active ? 'border-b border-gray-200 bg-white' : 'bg-gray-50/50'}
           `}
         >
           <h3
             className={`
               text-sm font-semibold transition-colors duration-200
-              ${isActive ? 'text-boaz-blue-light' : isCompleted ? 'text-gray-600' : 'text-gray-500'}
+              ${active ? 'text-boaz-blue-light' : isCompleted ? 'text-gray-600' : 'text-gray-500'}
             `}
           >
             {step.title}
           </h3>
 
           {/* Dropdown chevron indicator */}
-          <div className="bg-gray-200/80 w-7 h-7 rounded flex items-center justify-center shrink-0 ml-3">
+          <div className="bg-gray-200/80 w-7 h-7 rounded flex items-center justify-center shrink-0 ml-3" onClick={handleActiveChange}>
             <svg
-              className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${active ? 'rotate-180' : ''}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -88,7 +91,7 @@ export const StepCard = ({ step, isCompleted, isActive, isLast }: StepCardProps)
         <div
           className={`
             overflow-hidden transition-all duration-400 ease-out
-            ${isActive ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'}
+            ${active ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'}
           `}
         >
           <div className="px-4 py-4 bg-white text-sm text-gray-500 leading-relaxed">

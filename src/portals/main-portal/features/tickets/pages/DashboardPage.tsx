@@ -15,7 +15,7 @@ export const DashboardPage = () => {
               .then((r) => {setServices(r)})
               .catch(console.error)
       }
-  }, []);
+  }, [services.length, setLoading, setServices]);
 
   return (
     <div>
