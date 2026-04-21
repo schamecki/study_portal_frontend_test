@@ -1,7 +1,7 @@
 import logoBoaz from "../../../../../assets/images/logo-boaz.png";
 
 interface ContractContentProps {
-    formData?: Record<string, any>;
+    formData?: Record<string, string | boolean | File>;
 }
 
 const ContractContent = ({ formData }: ContractContentProps) => {
@@ -27,7 +27,7 @@ const ContractContent = ({ formData }: ContractContentProps) => {
                 </p>
 
                 <p>
-                    Mme/M. <span className="font-bold">{lastName} {firstName}</span>, {birthDate !== '...' ? `né(e) le ${birthDate}` : ''} étudiant(e), demeurant au <span className="font-bold">CAMEROUN</span> Tél <span className="font-bold">{phone}</span>, mail : <span className="font-bold">{email}</span>. Ci-après désigné l'<span className="font-bold">ETUDIANT(e)</span> d'autre part.
+                    Mme/M. <span className="font-bold">{lastName as string} {firstName as string}</span>, {birthDate !== '...' ? `né(e) le ${birthDate}` : ''} étudiant(e), demeurant au <span className="font-bold">CAMEROUN</span> Tél <span className="font-bold">{phone as string}</span>, mail : <span className="font-bold">{email as string}</span>. Ci-après désigné l'<span className="font-bold">ETUDIANT(e)</span> d'autre part.
                 </p>
 
                 <p className="uppercase font-extrabold italic border-b border-gray-200 pb-2">Il a été préalablement exposé ce qui suit</p>
@@ -37,7 +37,7 @@ const ContractContent = ({ formData }: ContractContentProps) => {
                 </p>
 
                 <p>
-                    <span className="font-bold">2 –</span> Mme/M. <span className="font-bold">{lastName} {firstName}</span> souhaite poursuivre ses études en France.
+                    <span className="font-bold">2 –</span> Mme/M. <span className="font-bold">{lastName as string} {firstName as string}</span> souhaite poursuivre ses études en France.
                 </p>
 
                 <p>

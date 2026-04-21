@@ -20,19 +20,18 @@ export const Stepper = ({
 }: StepperProps) => {
   if (orientation === 'vertical') {
     return (
-      <div className="flex flex-col gap-0">
+      <div className="flex flex-col">
         {steps.map((step, index) => {
           const globalStepId = startAt + index;
           const isCompleted = completedSteps.includes(globalStepId) || index < currentStep;
           const isActive = index === currentStep;
 
           return (
-            <div key={index} className="flex items-start gap-3">
-              {/* Circle + line */}
+            <div key={index} className="flex items-start gap-4">
               <div className="flex flex-col items-center">
                 <div
                   className={`
-                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0
+                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 z-10
                     transition-colors duration-300
                     ${isCompleted 
                       ? 'bg-boaz-blue-light text-white' 
@@ -54,7 +53,6 @@ export const Stepper = ({
                 )}
               </div>
 
-              {/* Text */}
               <div className="pt-2">
                 <p className={`text-sm font-medium ${isActive ? 'text-boaz-blue-light' : isCompleted ? 'text-primary' : 'text-muted'}`}>
                   {step.label}
@@ -72,15 +70,25 @@ export const Stepper = ({
 
   // Horizontal stepper
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-start justify-center w-full">
       {steps.map((step, index) => {
         const globalStepId = startAt + index;
         const isCompleted = completedSteps.includes(globalStepId) || index < currentStep;
         const isActive = index === currentStep;
 
         return (
-          <div key={index} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center">
+          <div key={index} className="relative flex-1">
+            {/* Connector Line - Only between circles */}
+            {index < steps.length - 1 && (
+              <div 
+                className={`
+                  absolute top-5 left-1/2 w-full h-0.5 -translate-y-1/2 z-0
+                  ${isCompleted ? 'bg-boaz-blue-light' : 'bg-gray-300'}
+                `} 
+              />
+            )}
+            
+            <div className="relative flex flex-col items-center z-10">
               {/* Circle */}
               <div
                 className={`
@@ -103,18 +111,10 @@ export const Stepper = ({
               </div>
 
               {/* Label */}
-              <p className={`text-xs mt-2 font-medium text-center ${isActive ? 'text-boaz-blue-light' : isCompleted ? 'text-primary' : 'text-muted'}`}>
-                {step.label}
+              <p className={`text-[10px] mt-2 font-bold text-center leading-tight max-w-[110px] ${isActive ? 'text-boaz-blue-light' : isCompleted ? 'text-primary' : 'text-muted'}`}>
+                {step.label.toUpperCase()}
               </p>
-              {step.description && (
-                <p className="text-xs text-muted text-center">{step.description}</p>
-              )}
             </div>
-
-            {/* Line */}
-            {index < steps.length - 1 && (
-              <div className={`flex-1 h-0.5 mx-2 mt-[-20px] ${isCompleted ? 'bg-boaz-blue-light' : 'bg-gray-300'}`} />
-            )}
           </div>
         );
       })}
