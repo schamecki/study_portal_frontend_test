@@ -20,15 +20,19 @@ export const MainLayout = () => {
                     <Header onMenuClick={() => setMobileMenuOpen(true)} />
                 </div>
 
-                {/* Content area — white rounded card matching Figma */}
-                <main className="flex-1 overflow-y-auto rounded-2xl px-4 lg:px-8 pb-6">
-                    <div className="relative bg-card rounded-2xl shadow-card p-6 lg:p-8 min-h-full bg-white">
+                {/* Content area — fixed rounded container with internal scroll */}
+                <main className="flex-1 flex flex-col overflow-hidden px-4 lg:px-8 pb-6 mt-4">
+                    <div className="flex-1 relative bg-white rounded-2xl shadow-card overflow-hidden flex flex-col">
                         {isLoading && (
                             <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center rounded-2xl z-50 transition-all duration-300">
                                 <Loader size="lg" />
                             </div>
                         )}
-                        <Outlet />
+                        
+                        {/* Scrollable content area */}
+                        <div className="flex-1 overflow-y-auto p-6 lg:p-8 scrollbar-hide">
+                            <Outlet />
+                        </div>
                     </div>
                 </main>
             </div>
