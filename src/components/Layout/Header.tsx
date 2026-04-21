@@ -117,7 +117,7 @@ export const Header = ({onMenuClick}: HeaderProps) => {
                                 <div className="fixed inset-0 z-10" onClick={() => setDropdownOpen(false)} />
                                 <div className="absolute right-0 top-full mt-3 w-48 bg-white rounded-xl shadow-lg border border-light py-2 z-20">
                                     <Link
-                                        to="/profil"
+                                        to="/profile"
                                         className="block px-4 py-2 text-sm text-secondary hover:bg-sidebar-hover-bg transition-colors"
                                     >
                                         Mon Profil
